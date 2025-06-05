@@ -139,4 +139,3 @@ const resolvers = {
 };
 
 module.exports = resolvers;
-module.exports.getUserFromToken = getUserFromToken;

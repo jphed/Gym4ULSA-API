@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const db = require('./database/db');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
-const { getUserFromToken } = require('./graphql/resolvers');
+const getUserFromToken = require('./graphql/resolvers/getUserFromToken');
 
 const server = new ApolloServer({
   typeDefs,
