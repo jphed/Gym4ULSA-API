@@ -2,10 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const db = require('./database/db');
 
 const typeDefs = require('./graphql/typeDefs');
-const resolvers = require('./graphql/resolvers');
-
-// Importa la función getUserFromToken desde tus resolvers
-const { getUserFromToken } = require('./graphql/resolvers');
+const { resolvers, getUserFromToken } = require('./graphql/resolvers');
 
 const server = new ApolloServer({
   typeDefs,
