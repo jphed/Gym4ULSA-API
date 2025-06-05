@@ -1,0 +1,30 @@
+# Node modules (dependencias locales)
+node_modules/
+
+# Variables de entorno (tokens, contraseñas)
+.env
+
+# Archivos de respaldo de base de datos
+backup.sql
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de bases de datos locales u ocultos
+*.sqlite
+*.db
+*.bak
+
+# Entornos específicos de editor
+.vscode/
+.idea/
+
+# Archivos de compilación (en caso de usarlos)
+dist/
+build/
