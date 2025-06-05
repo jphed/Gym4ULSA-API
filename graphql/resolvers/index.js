@@ -139,6 +139,6 @@ const resolvers = {
 };
 
 module.exports = {
-  ...resolvers,
+  resolvers,
   getUserFromToken
 };
