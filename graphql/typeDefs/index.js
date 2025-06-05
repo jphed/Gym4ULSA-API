@@ -7,6 +7,7 @@ const typeDefs = gql`
     email: String
     password: String
     is_deleted: Boolean
+    role: String
   }
 
   type Exercise {
@@ -95,8 +96,8 @@ const typeDefs = gql`
 
   type Mutation {
     # User
-    createUser(name: String!, email: String!, password: String!): User
-    updateUser(id: Int!, name: String, email: String, password: String, is_deleted: Boolean): User
+    createUser(name: String!, email: String!, password: String!, role: String): User
+    updateUser(id: Int!, name: String, email: String, password: String, is_deleted: Boolean, role: String): User
     deleteUser(id: Int!): Boolean
 
     # Exercise

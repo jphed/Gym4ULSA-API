@@ -1,7 +1,15 @@
 const db = require('../../database/db');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const SECRET = 'tu_clave_secreta'; // Usa una variable de entorno en producción
+
+function getUserFromToken(token) {
+  if (!token) return null;
+  try {
+    return jwt.verify(token.replace("Bearer ", ""), SECRET);
+  } catch {
+    return null;
+  }
+}
 
 const resolvers = {
   Query: {
@@ -30,15 +38,31 @@ const resolvers = {
 
   Mutation: {
     // User
-    createUser: async (_, args) => {
-      const [id] = await db('User').insert(args);
-      return { ...args, id };
+    createUser: async (_, args, context) => {
+      // Solo admin puede crear usuarios con rol admin
+      if (args.role === "admin") {
+        if (!context.user || context.user.role !== "admin") {
+          throw new Error("Solo un admin puede crear otro admin");
+        }
+      }
+      const [id] = await db('User').insert({
+        ...args,
+        role: args.role || "cliente"
+      });
+      return { ...args, id, role: args.role || "cliente" };
     },
-    updateUser: async (_, { id, ...data }) => {
+    updateUser: async (_, { id, ...data }, context) => {
+      // Solo admin puede cambiar el rol
+      if (data.role && (!context.user || context.user.role !== "admin")) {
+        throw new Error("Solo un admin puede cambiar el rol");
+      }
       await db('User').where({ id }).update(data);
       return { id, ...data };
     },
-    deleteUser: async (_, { id }) => {
+    deleteUser: async (_, { id }, context) => {
+      if (!context.user || context.user.role !== "admin") {
+        throw new Error("Solo un admin puede eliminar usuarios");
+      }
       await db.raw('CALL BajaUsuarioLogico(?)', [id]);
       return true;
     },
@@ -104,7 +128,11 @@ const resolvers = {
       const user = await db('User').where({ email }).first();
       if (!user || user.is_deleted) throw new Error('Usuario no encontrado');
       if (user.password !== password) throw new Error('Contraseña incorrecta');
-      const token = jwt.sign({ userId: user.id, email: user.email }, SECRET, { expiresIn: '1d' });
+      const token = jwt.sign(
+        { userId: user.id, email: user.email, role: user.role },
+        SECRET,
+        { expiresIn: '1d' }
+      );
       return { token, user };
     },
   }
