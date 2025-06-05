@@ -138,7 +138,5 @@ const resolvers = {
   }
 };
 
-module.exports = {
-  resolvers,
-  getUserFromToken
-};
+module.exports = resolvers;
+module.exports.getUserFromToken = getUserFromToken;
