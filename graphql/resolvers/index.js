@@ -103,7 +103,6 @@ const resolvers = {
     login: async (_, { email, password }) => {
       const user = await db('User').where({ email }).first();
       if (!user || user.is_deleted) throw new Error('Usuario no encontrado');
-      // Solo para pruebas: compara texto plano
       if (user.password !== password) throw new Error('Contraseña incorrecta');
       const token = jwt.sign({ userId: user.id, email: user.email }, SECRET, { expiresIn: '1d' });
       return { token, user };
